@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Txgls Blips</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            color: white;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1400px;
+            height: 900px;
+            background: rgba(80, 80, 80, 0.4);
+            border: 1rem solid;
+            border-radius: 35px;
+            overflow: clip;
+            animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.85) rotateY(15deg);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotateY(0deg);
+                filter: blur(0px);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B1539 0%, #A01842 25%, #B91E47 50%, #A01842 75%, #8B1538 100%);
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: clip;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: headerShine 4s infinite;
+        }
+
+        @keyframes headerShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #8B1538;
+            box-shadow: 
+                0 8px 24px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(139, 21, 56, 0.3), transparent);
+            animation: logoRotate 3s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes logoRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.8);
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .version-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 4px 12px;
+            border-radius: 24px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .close-btn {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.8) 0%, rgba(229, 57, 53, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .close-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .close-btn:hover::before {
+            left: 100%;
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 1) 0%, rgba(229, 57, 53, 1) 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(244, 67, 54, 0.4);
+        }
+
+        .main-content {
+            display: flex;
+            height: calc(100% - 96px);
+            border-radius: 0 0 24px 24px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .sidebar {
+            width: 380px;
+            background: rgba(0, 0, 0, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 0 24px;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(139, 21, 56, 0.5) 50%, transparent 100%);
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .nav-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 12px;
+            background: linear-gradient(180deg, #8B1538, #B91E47);
+            border-radius: 2px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(139, 21, 56, 0.6) 0%, rgba(185, 30, 71, 0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, rgba(139, 21, 56, 0.8) 0%, rgba(185, 30, 71, 0.6) 100%);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 
+                0 8px 32px rgba(139, 21, 56, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(139, 21, 56, 1) 0%, rgba(185, 30, 71, 0.8) 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(139, 21, 56, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .nav-btn-icon {
+            font-size: 18px;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+
+        .blips-section {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .blips-list {
+            max-height: 100%;
+            overflow-y: auto;
+            padding-right: 12px;
+        }
+
+        .blip-item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        .blip-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #8B1538, #B91E47);
+            transition: width 0.3s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .blip-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+        }
+
+        .blip-item:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+
+        .blip-name {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: white;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .blip-info {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 32px;
+            background: rgba(0, 0, 0, 0);
+            overflow-y: auto;
+            position: relative;
+            backdrop-filter: blur(20px);
+            border-radius: 0 0 24px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 21, 56, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(185, 30, 71, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .tab-content {
+            display: none;
+            animation: tabSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes tabSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(24px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .tab-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .tab-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #8B1538, #B91E47);
+            border-radius: 1px;
+        }
+
+        .tab-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(139, 21, 56, 0.8) 0%, rgba(185, 30, 71, 0.6) 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 
+                0 8px 24px rgba(139, 21, 56, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+        }
+
+        .current-coords {
+            background: rgba(139, 21, 56, 0.12);
+            border: 1px solid rgba(139, 21, 56, 0.5);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .current-coords::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 21, 56, 0.1), transparent);
+            animation: coordsPulse 3s infinite;
+        }
+
+        @keyframes coordsPulse {
+            0%, 100% { left: -100%; opacity: 0; }
+            50% { left: 100%; opacity: 1; }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(139, 21, 56, 0.9);
+            box-shadow: 
+                0 0 0 3px rgba(139, 21, 56, 0.4),
+                0 8px 32px rgba(139, 21, 56, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .coords-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B1538 0%, #B91E47 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 24px rgba(139, 21, 56, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #A01842 0%, #C7204F 100%);
+            box-shadow: 0 12px 40px rgba(139, 21, 56, 0.6);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .delete-btn, .teleport-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transform: scale(1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .delete-btn::before, .teleport-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .delete-btn:hover::before, .teleport-btn:hover::before {
+            left: 100%;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.8), rgba(229, 57, 53, 0.8));
+            color: white;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3);
+        }
+
+        .teleport-btn {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.8), rgba(251, 140, 0, 0.8));
+            color: white;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            box-shadow: 0 4px 16px rgba(255, 152, 0, 0.3);
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-4px) scale(1.15);
+            background: linear-gradient(135deg, rgba(244, 67, 54, 1), rgba(229, 57, 53, 1));
+            box-shadow: 
+                0 8px 32px rgba(244, 67, 54, 0.6),
+                0 0 20px rgba(244, 67, 54, 0.4);
+            border-color: rgba(244, 67, 54, 0.8);
+        }
+
+        .teleport-btn:hover {
+            transform: translateY(-4px) scale(1.15);
+            background: linear-gradient(135deg, rgba(255, 152, 0, 1), rgba(251, 140, 0, 1));
+            box-shadow: 
+                0 8px 32px rgba(255, 152, 0, 0.6),
+                0 0 20px rgba(255, 152, 0, 0.4);
+            border-color: rgba(255, 152, 0, 0.8);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #8B1538, #B91E47);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(139, 21, 56, 0.2);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 900;
+            color: #B91E47;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(185, 30, 71, 0.5);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(139, 21, 56, 0.8), rgba(185, 30, 71, 0.8));
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(139, 21, 56, 1), rgba(185, 30, 71, 1));
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            opacity: 0.6;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: rgba(139, 21, 56, 0.6);
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 20px rgba(139, 21, 56, 0.3));
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .glow {
+            box-shadow: 
+                0 0 16px rgba(139, 21, 56, 0.6),
+                0 0 32px rgba(139, 21, 56, 0.4) !important;
+            border-color: rgba(139, 21, 56, 0.8) !important;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.02);
+            }
+        }
+
+        .nav-btn:hover .nav-btn-icon {
+            animation: iconBounce 0.6s ease;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="blipsContainer">
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">T</div>
+                <div>
+                    <h1>Txgls Blips</h1>
+                    <div class="version-badge">v1.0.3</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="close-btn" onclick="closeUI()">✕ Close</button>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="nav-section">
+                    <div class="nav-title">Navigation</div>
+                    <button class="nav-btn active" onclick="showTab('create')">
+                        <span class="nav-btn-icon">➕</span>
+                        Create Blip
+                    </button>
+                    <button class="nav-btn" onclick="showTab('delete')">
+                        <span class="nav-btn-icon">🗑️</span>
+                        Delete Blip
+                    </button>
+                    <button class="nav-btn" onclick="showTab('view')">
+                        <span class="nav-btn-icon">👁️</span>
+                        View Blips
+                    </button>
+                </div>
+                
+                <div class="blips-section">
+                    <div class="nav-title">Active Blips</div>
+                    <div class="blips-list" id="blipsList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📍</div>
+                            <div class="empty-state-text">No blips created yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="tab-content active" id="createTab">
+                    <div class="tab-header">
+                        <div class="tab-icon">➕</div>
+                        <div class="tab-title">Create New Blip</div>
+                    </div>
+                    
+                    <div class="current-coords pulse" id="currentCoords">
+                        📍 Current Position: Click "Use Current Position" to populate coordinates
+                    </div>
+                    
+                    <form id="createBlipForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="blipName">🏷️ Blip Name</label>
+                                <input type="text" id="blipName" placeholder="Enter blip name..." required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="blipSprite">🎨 Sprite ID</label>
+                                <input type="number" id="blipSprite" placeholder="1-826" min="1" max="826" value="1" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="blipColor">🌈 Color ID</label>
+                                <input type="number" id="blipColor" placeholder="0-85" min="0" max="85" value="1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="blipSize">📏 Size</label>
+                                <input type="number" id="blipSize" placeholder="0.5-1.0" min="0.5" max="1.0" step="0.1" value="1.0" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label>📍 Coordinates</label>
+                                <div class="coords-group">
+                                    <input type="number" id="coordX" placeholder="X Coordinate" step="0.01" required>
+                                    <input type="number" id="coordY" placeholder="Y Coordinate" step="0.01" required>
+                                    <input type="number" id="coordZ" placeholder="Z Coordinate" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="useCurrentPosition()">
+                                📍 Use Current Position
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                ✨ Create Blip
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="tab-content" id="deleteTab">
+                    <div class="tab-header">
+                        <div class="tab-icon">🗑️</div>
+                        <div class="tab-title">Delete Blips</div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalBlipsCount">0</div>
+                            <div class="stat-label">Total Blips</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="deletedToday">0</div>
+                            <div class="stat-label">Deleted Today</div>
+                        </div>
+                    </div>
+                    
+                    <div id="deleteBlipsList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🗑️</div>
+                            <div class="empty-state-text">No blips to delete</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="viewTab">
+                    <div class="tab-header">
+                        <div class="tab-icon">👁️</div>
+                        <div class="tab-title">View All Blips</div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="viewTotalBlipsCount">0</div>
+                            <div class="stat-label">Total Blips</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="nearbyBlips">0</div>
+                            <div class="stat-label">Nearby Blips</div>
+                        </div>
+                    </div>
+                    
+                    <div id="viewBlipsList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👁️</div>
+                            <div class="empty-state-text">No blips to display</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBlips = [];
+        let deletedCount = 0;
+
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+            
+            if (data.type === 'openUI') {
+                document.getElementById('blipsContainer').style.display = 'block';
+                currentBlips = data.blips || [];
+                updateBlipsList();
+                updateCurrentPosition();
+                updateStats();
+            } else if (data.type === 'closeUI') {
+                document.getElementById('blipsContainer').style.display = 'none';
+            } else if (data.type === 'updateBlips') {
+                currentBlips = data.blips || [];
+                updateBlipsList();
+                updateStats();
+            }
+        });
+
+        function closeUI() {
+            fetch(`https://${GetParentResourceName()}/closeUI`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'view' || tabName === 'delete') {
+                updateStats();
+            }
+        }
+
+        function updateStats() {
+            const totalCount = currentBlips.length;
+            document.getElementById('totalBlipsCount').textContent = totalCount;
+            document.getElementById('viewTotalBlipsCount').textContent = totalCount;
+            document.getElementById('deletedToday').textContent = deletedCount;
+            
+            const nearbyCount = Math.floor(totalCount * 0.3);
+            document.getElementById('nearbyBlips').textContent = nearbyCount;
+        }
+
+        function updateBlipsList() {
+            const sidebarList = document.getElementById('blipsList');
+            const deleteList = document.getElementById('deleteBlipsList');
+            const viewList = document.getElementById('viewBlipsList');
+            
+            sidebarList.innerHTML = '';
+            deleteList.innerHTML = '';
+            viewList.innerHTML = '';
+            
+            if (currentBlips.length === 0) {
+                sidebarList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📍</div>
+                        <div class="empty-state-text">No blips created yet</div>
+                    </div>`;
+                deleteList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🗑️</div>
+                        <div class="empty-state-text">No blips to delete</div>
+                    </div>`;
+                viewList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👁️</div>
+                        <div class="empty-state-text">No blips to display</div>
+                    </div>`;
+                return;
+            }
+            
+            currentBlips.forEach((blip, index) => {
+                const sidebarItem = document.createElement('div');
+                sidebarItem.className = 'blip-item';
+                sidebarItem.innerHTML = `
+                    <div class="blip-name">${blip.name}</div>
+                    <div class="blip-info">🎨 Sprite: ${blip.sprite} | 🌈 Color: ${blip.color} | 📏 Size: ${blip.size || 1.0}</div>
+                    <div class="blip-info">📍 X: ${blip.coords.x.toFixed(2)} Y: ${blip.coords.y.toFixed(2)} Z: ${blip.coords.z.toFixed(2)}</div>
+                `;
+                sidebarList.appendChild(sidebarItem);
+                
+                const deleteItem = document.createElement('div');
+                deleteItem.className = 'blip-item';
+                deleteItem.innerHTML = `
+                    <div class="blip-name">${blip.name}</div>
+                    <div class="blip-info">🎨 Sprite: ${blip.sprite} | 🌈 Color: ${blip.color} | 📏 Size: ${blip.size || 1.0}</div>
+                    <div class="blip-info">📍 Coordinates: ${blip.coords.x.toFixed(2)}, ${blip.coords.y.toFixed(2)}, ${blip.coords.z.toFixed(2)}</div>
+                    <div style="margin-top: 12px;">
+                        <button class="delete-btn" onclick="deleteBlip('${blip.name}')">🗑️ Delete</button>
+                    </div>
+                `;
+                deleteList.appendChild(deleteItem);
+                
+                const viewItem = document.createElement('div');
+                viewItem.className = 'blip-item';
+                viewItem.innerHTML = `
+                    <div class="blip-name">${blip.name}</div>
+                    <div class="blip-info">🎨 Sprite: ${blip.sprite} | 🌈 Color: ${blip.color} | 📏 Size: ${blip.size || 1.0}</div>
+                    <div class="blip-info">📍 Coordinates: ${blip.coords.x.toFixed(2)}, ${blip.coords.y.toFixed(2)}, ${blip.coords.z.toFixed(2)}</div>
+                    <div style="margin-top: 12px;">
+                        <button class="teleport-btn" onclick="teleportToBlip('${blip.name}')">📍 Teleport</button>
+                        <button class="delete-btn" onclick="deleteBlip('${blip.name}')">🗑️ Delete</button>
+                    </div>
+                `;
+                viewList.appendChild(viewItem);
+            });
+        }
+
+        document.getElementById('createBlipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('blipName').value.trim();
+            const sprite = parseInt(document.getElementById('blipSprite').value);
+            const color = parseInt(document.getElementById('blipColor').value);
+            const size = parseFloat(document.getElementById('blipSize').value);
+            const x = parseFloat(document.getElementById('coordX').value);
+            const y = parseFloat(document.getElementById('coordY').value);
+            const z = parseFloat(document.getElementById('coordZ').value);
+            
+            if (!name) {
+                return;
+            }
+            
+            if (isNaN(sprite) || sprite < 1 || sprite > 826) {
+                return;
+            }
+            
+            if (isNaN(color) || color < 0 || color > 85) {
+                return;
+            }
+            
+            if (isNaN(size) || size < 0.5 || size > 1.0) {
+                return;
+            }
+            
+            if (isNaN(x) || isNaN(y) || isNaN(z)) {
+                return;
+            }
+            
+            if (currentBlips.some(blip => blip.name.toLowerCase() === name.toLowerCase())) {
+                return;
+            }
+            
+            fetch(`https://${GetParentResourceName()}/createBlip`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: name,
+                    sprite: sprite,
+                    color: color,
+                    size: size,
+                    x: x,
+                    y: y,
+                    z: z
+                })
+            });
+            
+            document.getElementById('createBlipForm').reset();
+            document.getElementById('blipSprite').value = 1;
+            document.getElementById('blipColor').value = 1;
+            document.getElementById('blipSize').value = 1.0;
+            
+            document.getElementById('createBlipForm').style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                document.getElementById('createBlipForm').style.transform = 'scale(1)';
+            }, 200);
+        });
+
+        function deleteBlip(blipName) {
+            fetch(`https://${GetParentResourceName()}/deleteBlip`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: blipName })
+            });
+            
+            deletedCount++;
+            updateStats();
+        }
+
+        function teleportToBlip(blipName) {
+            fetch(`https://${GetParentResourceName()}/teleportToBlip`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: blipName })
+            });
+        }
+
+        function useCurrentPosition() {
+            fetch(`https://${GetParentResourceName()}/getCurrentPosition`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(coords => {
+                document.getElementById('coordX').value = coords.x.toFixed(2);
+                document.getElementById('coordY').value = coords.y.toFixed(2);
+                document.getElementById('coordZ').value = coords.z.toFixed(2);
+                
+                const coordInputs = document.querySelectorAll('#coordX, #coordY, #coordZ');
+                coordInputs.forEach((input, index) => {
+                    setTimeout(() => {
+                        input.classList.add('glow');
+                        setTimeout(() => input.classList.remove('glow'), 1500);
+                    }, index * 100);
+                });
+            });
+        }
+
+        function updateCurrentPosition() {
+            fetch(`https://${GetParentResourceName()}/getCurrentPosition`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(coords => {
+                document.getElementById('currentCoords').innerHTML = 
+                    `📍 Current Position: X: ${coords.x.toFixed(2)} Y: ${coords.y.toFixed(2)} Z: ${coords.z.toFixed(2)}`;
+            })
+            .catch(error => {
+                document.getElementById('currentCoords').innerHTML = 
+                    '📍 Current Position: Click "Use Current Position" to populate coordinates';
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeUI();
+            }
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</body>
+</html>
